@@ -1,0 +1,69 @@
+You are given a list of positive integers nums where at each index i you can either jump to index i + nums[i] or to i - nums[i] if it is within the list.
+
+For each number in the list, find the minimum number of jumps required to reach another value with different parity in the original order of the input.
+If you cannot reach another number with different parity, set it to -1.
+
+
+
+
+vector<int> solve(vector<int>& nums) {
+    int n=nums.size();
+
+    vector<int> adj[n];
+
+    for(int i=0;i<n;i++){
+        if(i+nums[i]<=n) adj[i+nums[i]].emplace_back(i);
+        if(i-nums[i]>=0) adj[i-nums[i]].emplace_back(i);
+    }
+
+    vector<int> even(n,0),odd(n,0);
+
+    queue<int> q;
+
+    for(int i=0;i<n;i++){
+        if(nums[i]%2==0) q.push(i);
+    }
+
+    while(!q.empty()){
+        auto temp=q.front();
+        q.pop();
+        for(auto var:adj[temp]){
+            if(nums[var]%2 && odd[var]==0){
+                odd[var]=odd[temp]+1;
+                q.push(var);
+            }
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(nums[i]%2==1) q.push(i);
+    }
+
+    while(!q.empty()){
+        auto temp=q.front();
+        q.pop();
+        for(auto var:adj[temp]){
+            if(nums[var]%2==0 && even[var]==0){
+                even[var]=even[temp]+1;
+                q.push(var);
+            }
+        }
+    }
+
+    vector<int> ans(n);
+
+    for(int i=0;i<n;i++){
+        if(nums[i]%2){
+            ans[i]=odd[i];
+        }
+        else{
+            ans[i]=even[i];
+        }
+        if(ans[i]==0){
+            ans[i]=-1;
+        }
+    }
+    return ans;
+
+
+
+}
