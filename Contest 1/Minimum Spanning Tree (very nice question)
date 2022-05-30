@@ -1,0 +1,117 @@
+###what we have to do is:
+
+1->find minimum spanning tree weight using adge a and b
+2-> find minimum spanning tree weight excluding a and b
+
+
+
+
+# Python program to implement above approach
+
+# Class to implement disjoint set union
+class dsu:
+	def __init__(self):
+		self.parent = {}
+		self.rank = {}
+
+	# Function to find parent of a node
+	def find(self, x):
+		if (x not in self.parent):
+			self.rank[x] = 1
+			self.parent[x] = x
+		if (self.parent[x] != x):
+			self.parent[x] = \
+				self.find(self.parent[x])
+		return (self.parent[x])
+
+	# Function to perform union
+	def union(self, u, v):
+		p1 = self.find(u)
+		p2 = self.find(v)
+
+		# If do not belong to same set
+		if (p1 != p2):
+			if (self.rank[p1]
+					< self.rank[p2]):
+				self.parent[p1] = p2
+
+			elif(self.rank[p1]
+				> self.rank[p1]):
+				self.parent[p2] = p1
+			else:
+				self.parent[p2] = p1
+				self.rank[p1] += 1
+			return (True)
+
+		# Belong to same set
+		else:
+			return False
+
+
+class Solution:
+
+	# Find the MST weight
+	def kruskal(self, include, edges, a, b):
+		obj = dsu()
+		total = 0
+
+		# If include is True , then include
+		# edge (a,b) first
+		if (include):
+			for (u, v, wt) in edges:
+
+				# As graph is undirected so
+				# (a,b) or (b,a) is same
+				# If found break the for loop
+				if (u, v) == (a, b) or \
+						(b, a) == (u, v):
+					val = obj.union(a, b)
+					total += wt
+					break
+
+		# Go on adding edge to the disjoint set
+		for (u, v, wt) in edges:
+
+			# Nodes (u,v) not belong to
+			# same set include it
+			if (obj.union(u, v)):
+				total += wt
+
+		# Finally return total weight of MST
+		return (total)
+
+	# Function to find if edge (a, b)
+	# is part of any MST
+	def solve(self, edges, a, b):
+
+		# Sort edges according to weight
+		# in ascending order
+		edges.sort(key=lambda it: it[2])
+
+		# Not included edge (a,b)
+		overall = self.kruskal(False,
+							edges, a, b)
+
+		# Find mst with edge (a,b) included
+		inc = self.kruskal(True,
+						edges, a, b)
+
+		# Finally return True if same
+		# else False
+		if (inc == overall):
+			return (True)
+		else:
+			return (False)
+
+
+# Driver code
+if __name__ == "__main__":
+	obj = Solution()
+	graph = [[0, 1, 20], [0, 2, 5],
+			[0, 3, 10], [2, 3, 10]]
+	A, B = 2, 3
+	val = obj.solve(graph, A, B)
+	if (val):
+		print("True")
+	else:
+		print("False")
