@@ -1,0 +1,39 @@
+You are given a lowercase alphabet string s which you can rotate it at any point exactly once. Return the length of the longest palindromic 
+substring you can achieve by doing this.
+
+Input
+s = "carzrace"
+Output
+7
+Explanation
+We can rotate between "car" and "zrace" to get "racecarz". From here, the longest palindromic substring is "racecar" which has a length of 7.
+
+int solve(string s) {
+    int len=s.size();
+    s+=s;
+    int n=s.size();
+
+    int res=1;
+
+    for(int i=0;i<n;i++){
+        for(int mid=0;(i-mid)>=0 && (i+mid)<n;mid++){
+            if(s[i-mid]!=s[i+mid]) break;
+
+            if(2*mid+1<=len){
+                res=max(res,2*mid+1);
+            }
+        }
+    }
+     for(int i=0;i<n;i++){
+        for(int mid=1;(i-mid+1)>=0 && (i+mid)<n;mid++){
+            if(s[i-mid+1]!=s[i+mid]) break;
+
+            if(2*mid<=len){
+                res=max(res,2*mid);
+            }
+        }
+    }
+    return res;
+
+
+}
