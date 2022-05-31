@@ -1,0 +1,23 @@
+Given a string s, consisting of digits and lowercase alphabet characters, that's a run-length encoded string, return its decoded version.
+
+Note: The original string is guaranteed not to have numbers in it.
+
+string solve(string s) {
+    int n=s.size();
+    string ans="";
+    int l=0;
+
+    for(int i=0;i<n;i++){
+        int temp=s[i]-'0';
+
+        if(temp>=0 && temp<=9){
+            l=l*10+temp;
+        }
+        else{
+
+            while(l--) ans+=s[i];
+            l=0;
+        }
+    }
+    return ans;
+}
