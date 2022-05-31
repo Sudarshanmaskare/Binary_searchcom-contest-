@@ -1,0 +1,52 @@
+You are given two integer lists of the same length, deadlines and credits representing course assignments.
+deadlines[i] represents the deadline day for assignment i and credits[i] represents the amount of credits you get for assignment i. 
+Each assignment takes one day to complete, and can be done before or on the deadline day.
+You can't work on two assignments on the same day.
+
+
+You are given two integer lists of the same length, deadlines and credits representing course assignments. 
+deadlines[i] represents the deadline day for assignment i and credits[i] represents the amount of credits you get for assignment i.
+Each assignment takes one day to complete, and can be done before or on the deadline day. You can't work on two assignments on the same day.
+
+Note that you can work on an assignment on the day it's due and you're currently on the start of day 0.
+
+Return the maximum credit you can obtain by finishing some subset of the assignments.
+
+Constraints
+
+Length of deadlines ≤ 5000
+deadlines[i] ≤ 10000
+Example 1
+Input
+deadlines = [0, 1]
+credits = [3, 2]
+Output
+5
+Explanation
+We can take both assignments.
+
+
+int solve(vector<int>& deadlines, vector<int>& credits) {
+    vector<pair<int,int>> arr;
+
+    for(int i=0;i<credits.size();i++){
+        arr.push_back({deadlines[i],credits[i]});
+    }
+    sort(arr.begin(),arr.end());
+
+    int res=0;
+    priority_queue<int> pq;
+    for(int i=10000;i>=0;i--){
+
+        while(arr.size() && arr.back().first==i){
+            pq.push(arr.back().second);
+            arr.pop_back();
+        }
+
+        if(pq.size()){
+            res+=pq.top();
+            pq.pop();
+        }
+    }
+    return res;
+}
