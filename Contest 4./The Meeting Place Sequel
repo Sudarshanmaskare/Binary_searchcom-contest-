@@ -1,0 +1,89 @@
+You are given a two dimensional integer matrix consisting of:
+
+0 which represents an empty cell.
+1 which represents a wall.
+2 which represents a person.
+A person can walk up, down, left, right or stay in one time unit. Find a walkable cell such that it minimizes the time it would take for 
+everyone to meet and return the time.
+
+Note: two people can walk through the same empty cell and you can assume there is always some path between any two people.
+
+Constraints
+
+The number of cells in the matrix is at most 100,000
+Any two people are at most 30 travel distance away
+There are at most 30 people in the matrix
+
+
+bool isSafe(vector<vector<int>> &matrix, int r, int c) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    return (r >= 0 && c >= 0 && r < m && c < n && matrix[r][c] != 1);
+}
+
+void bfs(vector<vector<int>> &matrix, vector<vector<int>> &answer, int row, int col) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    int hor[4] = {-1, 1, 0, 0};
+    int ver[4] = {0, 0, 1, -1};
+
+    vector<vector<bool>> visited(m, vector<bool>(n, false));
+    queue<vector<int>> nodes;
+
+    nodes.push({row, col, 0});
+    visited[row][col] = true;
+
+
+    while (!nodes.empty()) {
+        int curRow = nodes.front()[0];
+        int curCol = nodes.front()[1];
+        int level = nodes.front()[2];
+        nodes.pop();
+
+        answer[curRow][curCol] = max(answer[curRow][curCol], level);
+
+        for (int i = 0; i < 4; i++) {
+            int newRow = curRow + hor[i];
+            int newCol = curCol + ver[i];
+
+            if (isSafe(matrix, newRow, newCol) && !visited[newRow][newCol]) {
+                visited[newRow][newCol] = true;
+                nodes.push({newRow, newCol, level + 1});
+            }
+        }
+    }
+
+    return;
+}
+
+int solve(vector<vector<int>> &matrix) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    vector<vector<int>> answer(m, vector<int>(n, -1));
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == 1) answer[i][j] = 31;
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == 2) {
+                bfs(matrix, answer, i, j);
+            }
+        }
+    }
+
+    int minTime = 31;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (answer[i][j] != -1) minTime = min(minTime, answer[i][j]);
+        }
+    }
+
+    return (minTime == 31 ? 0 : minTime);
+}
