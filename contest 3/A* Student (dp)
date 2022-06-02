@@ -1,0 +1,37 @@
+You are given three integer lists of same length deadlines, credits, and durations representing course assignments.
+For the ith assignment deadlines[i] represents its deadline, credits[i] represents its credit, and durations[i] represents the number of days
+it takes to finish the assignment. If you start an assignment, 
+it must be finished before another assignment can be started.
+
+You are given three integer lists of same length deadlines, credits, and durations representing course assignments. For the ith assignment deadlines[i] 
+represents its deadline, credits[i] represents its credit, and durations[i] represents the number of days it takes to finish the assignment. If you start an assignment, it must be finished before another assignment can be started.
+
+Note that you can work on an assignment on the day it's due and you're currently on the start of day 0.
+
+Return the maximum credit you can obtain by finishing some subset of the assignments.
+
+
+int dp[102][206];
+int cal(vector<vector<int>> &arr,int idx,int days){
+    if(idx==arr.size()) return 0;
+    if(dp[idx][days]!=-1) return dp[idx][days];
+   
+   int  ans=cal(arr,idx+1,days);
+    if(days+arr[idx][1]-1<=arr[idx][0]){
+        ans=max(ans,arr[idx][2]+cal(arr,idx+1,days+arr[idx][1]));
+    }
+    return dp[idx][days]=ans;
+}
+
+
+int solve(vector<int>& deadlines, vector<int>& credits, vector<int>& durations) {
+    memset(dp,-1,sizeof(dp));
+    vector<vector<int>> arr;
+    for(int i=0;i<credits.size();i++){
+        arr.push_back({deadlines[i],durations[i],credits[i]});
+    }
+    sort(arr.begin(),arr.end());
+
+    return cal(arr,0,0);
+    
+}
