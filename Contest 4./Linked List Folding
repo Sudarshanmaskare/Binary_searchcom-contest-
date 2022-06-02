@@ -1,0 +1,25 @@
+You are given a singly linked list node containing integer values. Take the first half of the linked list and fold over 
+the second half and merge the intersecting nodes by taking their sum.
+
+
+LLNode* solve(LLNode* node) {
+    LLNode *slow = node, *fast = node;
+    stack<int> s;
+
+    while (fast && fast->next) {
+        s.push(slow->val);
+        slow = slow->next;
+        fast = (fast->next)->next;
+    }
+
+    node = slow;
+    if (fast) slow = slow->next;
+
+    while (slow && !s.empty()) {
+        int x = s.top();
+        s.pop();
+        slow->val += x;
+        slow = slow->next;
+    }
+    return node;
+}
