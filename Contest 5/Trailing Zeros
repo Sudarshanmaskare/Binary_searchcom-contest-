@@ -1,0 +1,12 @@
+Given a positive integer k, consider the smallest positive integer x which all integers from 1..k inclusive divide evenly. 
+That is, consider the smallest x where x % 1 == 0, x % 2 == 0, ..., x % k == 0.
+
+Return the number of trailing zeroes in x.
+
+int solve(int k) {
+      int fs = 0;
+    while (k /= 5) {
+        fs++;
+    }
+    return fs;
+}
