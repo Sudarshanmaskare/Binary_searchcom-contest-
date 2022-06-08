@@ -1,0 +1,20 @@
+Given an integer list nums, swap every consecutive even integer with each other.
+
+vector<int> solve(vector<int>& nums) {
+    int n=nums.size();
+
+    int temp=-1;
+
+    for(int i=0;i<n;i++){
+        if(nums[i]%2==0){
+            if(temp!=-1){
+                swap(nums[i],nums[temp]);
+                temp=-1;
+            }
+            else{
+                temp=i;
+            }
+        }
+    }
+    return nums;
+}
